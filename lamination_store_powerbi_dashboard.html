@@ -1,0 +1,425 @@
+
+<h2 class="sr-only">Lamination Store Wholesale & Retail Supplier — interactive sales dashboard showing KPIs, revenue trends, product performance, customer analysis, and regional breakdown for 2025–2026.</h2>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.db{background:var(--color-background-tertiary);padding:0;min-height:100vh}
+.topbar{background:#1a2e4a;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.topbar-title{color:#fff;font-size:15px;font-weight:500;display:flex;align-items:center;gap:10px}
+.topbar-badge{background:#e8964d;color:#fff;font-size:11px;padding:3px 8px;border-radius:4px;font-weight:500}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.tab-nav{background:#1f3864;display:flex;gap:2px;padding:0 20px}
+.tab{color:#8aafd4;font-size:12px;padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab:hover{color:#c5daf0}
+.tab.active{color:#fff;border-bottom:2px solid #e8964d}
+.page{display:none;padding:16px 20px}
+.page.active{display:block}
+.filter-bar{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.filter-bar label{font-size:12px;color:var(--color-text-secondary)}
+.filter-bar select{font-size:12px;padding:4px 8px;border-radius:4px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);color:var(--color-text-primary)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;border-radius:3px 0 0 3px}
+.kpi.blue::before{background:#2e5984}
+.kpi.green::before{background:#3b6d11}
+.kpi.amber::before{background:#ba7517}
+.kpi.red::before{background:#993556}
+.kpi-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.kpi-value{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.kpi-sub{font-size:11px;color:var(--color-text-secondary)}
+.kpi-trend{font-size:11px;font-weight:500}
+.kpi-trend.up{color:#3b6d11}
+.kpi-trend.down{color:#993556}
+.row2{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:14px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.row-half{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px}
+.card-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:14px;text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;justify-content:space-between}
+.chart-wrap{position:relative;width:100%}
+.legend-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.bar-horiz{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-label{font-size:11px;color:var(--color-text-secondary);width:170px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;background:var(--color-background-secondary);border-radius:3px;height:18px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:10px;color:#fff;font-weight:500;transition:width .5s ease}
+.donut-wrap{display:flex;align-items:center;gap:20px}
+.donut-legend{display:flex;flex-direction:column;gap:8px;flex:1}
+.donut-leg-item{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.donut-leg-label{font-size:11px;color:var(--color-text-secondary);display:flex;align-items:center;gap:5px}
+.donut-leg-val{font-size:11px;font-weight:500;color:var(--color-text-primary)}
+.cust-table{width:100%;border-collapse:collapse}
+.cust-table th{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--color-text-secondary);padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary);text-align:left;font-weight:500}
+.cust-table td{font-size:12px;padding:7px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.cust-table tr:last-child td{border-bottom:none}
+.badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
+.badge.ws{background:#e6f1fb;color:#185fa5}
+.badge.rt{background:#fcebeb;color:#a32d2d}
+.meter-wrap{display:flex;flex-direction:column;gap:12px}
+.meter-row{display:flex;flex-direction:column;gap:4px}
+.meter-top{display:flex;justify-content:space-between;font-size:11px}
+.meter-name{color:var(--color-text-secondary)}
+.meter-val{color:var(--color-text-primary);font-weight:500}
+.meter-track{height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden}
+.meter-fill{height:100%;border-radius:4px}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.mini-stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.mini-stat-lbl{font-size:10px;color:var(--color-text-secondary);margin-bottom:4px}
+.mini-stat-val{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+</style>
+
+<div class="db">
+<div class="topbar">
+  <div class="topbar-title">
+    <i class="ti ti-stack" aria-hidden="true" style="font-size:18px;color:#e8964d"></i>
+    Lamination Store &mdash; Wholesale &amp; Retail Supplier
+    <span class="topbar-badge">2025 – 2026</span>
+  </div>
+  <div class="topbar-right">
+    <span style="font-size:11px;color:#8aafd4"><i class="ti ti-refresh" aria-hidden="true"></i> Live Data</span>
+    <span style="font-size:11px;color:#8aafd4"><i class="ti ti-user" aria-hidden="true"></i> Analytics</span>
+  </div>
+</div>
+
+<div class="tab-nav" role="tablist">
+  <div class="tab active" onclick="showPage('overview')" role="tab">Overview</div>
+  <div class="tab" onclick="showPage('products')" role="tab">Products</div>
+  <div class="tab" onclick="showPage('customers')" role="tab">Customers</div>
+  <div class="tab" onclick="showPage('team')" role="tab">Sales Team</div>
+</div>
+
+<!-- PAGE: OVERVIEW -->
+<div class="page active" id="page-overview">
+  <div class="filter-bar">
+    <i class="ti ti-filter" aria-hidden="true" style="font-size:14px;color:var(--color-text-secondary)"></i>
+    <label>Year</label>
+    <select id="yearFilter" onchange="applyFilters()">
+      <option value="all">All Years</option>
+      <option value="2024">2025</option>
+      <option value="2025">2026</option>
+    </select>
+    <label>Customer Type</label>
+    <select id="typeFilter" onchange="applyFilters()">
+      <option value="all">All Types</option>
+      <option value="Wholesale">Wholesale</option>
+      <option value="Retail">Retail</option>
+    </select>
+    <span style="font-size:11px;color:var(--color-text-secondary);margin-left:auto" id="filter-label">Showing: All 2,987 orders</span>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi blue">
+      <div class="kpi-label">Total Revenue</div>
+      <div class="kpi-value" id="kpi-rev">Rs. 1.01 Cr</div>
+      <div class="kpi-sub">All delivered orders <span class="kpi-trend up" id="kpi-rev-trend">↑ 8.4% YoY</span></div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">Total Profit</div>
+      <div class="kpi-value" id="kpi-profit">Rs. 29.6 L</div>
+      <div class="kpi-sub">Margin <span class="kpi-trend up" id="kpi-margin">29.2%</span></div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Total Orders</div>
+      <div class="kpi-value" id="kpi-orders">2,987</div>
+      <div class="kpi-sub">Avg value <span style="color:var(--color-text-primary);font-weight:500" id="kpi-aov">Rs. 3,389</span></div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Return Rate</div>
+      <div class="kpi-value" id="kpi-return">9.1%</div>
+      <div class="kpi-sub">291 returned orders <span class="kpi-trend down">↑ monitor</span></div>
+    </div>
+  </div>
+
+  <div class="row2">
+    <div class="card">
+      <div class="card-title">Monthly Revenue &amp; Profit Trend
+        <div class="legend-row" style="margin:0">
+          <span class="leg-item"><span class="leg-dot" style="background:#2e5984"></span>Revenue</span>
+          <span class="leg-item"><span class="leg-dot" style="background:#5b8c5a"></span>Profit</span>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:220px"><canvas id="trendChart" role="img" aria-label="Line chart of monthly revenue and profit from Jan 2024 to Dec 2025">Monthly revenue peaks in April, May, October, November.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue by Customer Type</div>
+      <div class="donut-wrap" style="margin-top:10px">
+        <div class="chart-wrap" style="height:150px;width:150px;flex-shrink:0"><canvas id="donutChart" role="img" aria-label="Donut chart showing Wholesale 86.6% and Retail 13.4% of revenue">Wholesale dominates at 86.6%.</canvas></div>
+        <div class="donut-legend">
+          <div class="donut-leg-item"><span class="donut-leg-label"><span class="leg-dot" style="background:#2e5984"></span>Wholesale</span><span class="donut-leg-val">Rs. 87.6L</span></div>
+          <div class="donut-leg-item"><span class="donut-leg-label"><span class="leg-dot" style="background:#e8964d"></span>Retail</span><span class="donut-leg-val">Rs. 13.6L</span></div>
+          <div style="margin-top:8px;padding-top:8px;border-top:0.5px solid var(--color-border-tertiary)">
+            <div style="font-size:10px;color:var(--color-text-secondary)">Wholesale share</div>
+            <div style="font-size:18px;font-weight:500;color:#185fa5">86.6%</div>
+          </div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="mini-stat"><div class="mini-stat-lbl">Delivery rate</div><div class="mini-stat-val">84.3%</div></div>
+        <div class="mini-stat"><div class="mini-stat-lbl">Avg ship time</div><div class="mini-stat-val">3.0 days</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row3">
+    <div class="card">
+      <div class="card-title">Revenue by Region</div>
+      <div class="chart-wrap" style="height:180px"><canvas id="regionChart" role="img" aria-label="Bar chart of revenue by sales region">East leads with Rs.22.4L.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Category Margin %</div>
+      <div class="meter-wrap" style="margin-top:8px">
+        <div class="meter-row"><div class="meter-top"><span class="meter-name">Film</span><span class="meter-val">31.3%</span></div><div class="meter-track"><div class="meter-fill" style="width:100%;background:#2e5984"></div></div></div>
+        <div class="meter-row"><div class="meter-top"><span class="meter-name">Pouch</span><span class="meter-val">29.8%</span></div><div class="meter-track"><div class="meter-fill" style="width:95%;background:#3E7CB1"></div></div></div>
+        <div class="meter-row"><div class="meter-top"><span class="meter-name">Sheet</span><span class="meter-val">29.2%</span></div><div class="meter-track"><div class="meter-fill" style="width:93%;background:#5B96C5"></div></div></div>
+        <div class="meter-row"><div class="meter-top"><span class="meter-name">Roll</span><span class="meter-val">28.3%</span></div><div class="meter-track"><div class="meter-fill" style="width:90%;background:#7EAFD4"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Order Status Split</div>
+      <div class="chart-wrap" style="height:180px"><canvas id="statusChart" role="img" aria-label="Doughnut chart of order statuses">84.3% delivered, 9.1% returned, 6.7% cancelled.</canvas></div>
+      <div class="legend-row" style="margin-top:8px;justify-content:center">
+        <span class="leg-item"><span class="leg-dot" style="background:#3b6d11"></span>Delivered 84.3%</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#e8964d"></span>Returned 9.1%</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#a32d2d"></span>Cancelled 6.7%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: PRODUCTS -->
+<div class="page" id="page-products">
+  <div class="row-half">
+    <div class="card">
+      <div class="card-title">Top 8 Products by Revenue</div>
+      <div class="bar-horiz" id="prodBars"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue by Category</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="catChart" role="img" aria-label="Bar chart of revenue by product category">Roll products lead at Rs.57.7L.</canvas></div>
+      <div class="legend-row" style="margin-top:8px">
+        <span class="leg-item"><span class="leg-dot" style="background:#2e5984"></span>Roll</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#3E7CB1"></span>Sheets</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#5b8c5a"></span>Louvers</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#e8964d"></span>Acrylic</span>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title">Category Performance Matrix</div>
+    <table class="cust-table">
+      <thead><tr><th>Category</th><th>Revenue</th><th>Profit</th><th>Margin %</th><th>Revenue Share</th></tr></thead>
+      <tbody>
+        <tr><td><b>Roll</b></td><td>Rs. 57,70,992</td><td>Rs. 16,35,209</td><td>28.3%</td><td><div style="display:flex;align-items:center;gap:6px"><div style="height:6px;width:57px;background:#2e5984;border-radius:3px"></div>57.0%</div></td></tr>
+        <tr><td><b>Sheets</b></td><td>Rs. 20,83,828</td><td>Rs. 6,52,145</td><td>31.3%</td><td><div style="display:flex;align-items:center;gap:6px"><div style="height:6px;width:21px;background:#3E7CB1;border-radius:3px"></div>20.6%</div></td></tr>
+        <tr><td><b>Louvers</b></td><td>Rs. 16,04,112</td><td>Rs. 4,78,309</td><td>29.8%</td><td><div style="display:flex;align-items:center;gap:6px"><div style="height:6px;width:16px;background:#5b8c5a;border-radius:3px"></div>15.8%</div></td></tr>
+        <tr><td><b>Acrylic</b></td><td>Rs. 6,62,786</td><td>Rs. 1,93,521</td><td>29.2%</td><td><div style="display:flex;align-items:center;gap:6px"><div style="height:6px;width:7px;background:#e8964d;border-radius:3px"></div>6.5%</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PAGE: CUSTOMERS -->
+<div class="page" id="page-customers">
+  <div class="row-half">
+    <div class="card">
+      <div class="card-title">Top 6 Customers by Revenue</div>
+      <table class="cust-table" id="custTable">
+        <thead><tr><th>#</th><th>Customer</th><th>Type</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--color-text-secondary)">1</td><td>ID Card Dist. Chandigarh</td><td><span class="badge ws">Wholesale</span></td><td>Rs. 7,94,253</td></tr>
+          <tr><td style="color:var(--color-text-secondary)">2</td><td>Business Supplies Co Coimbatore</td><td><span class="badge ws">Wholesale</span></td><td>Rs. 5,85,139</td></tr>
+          <tr><td style="color:var(--color-text-secondary)">3</td><td>ID Card Dist. Ahmedabad</td><td><span class="badge ws">Wholesale</span></td><td>Rs. 4,71,868</td></tr>
+          <tr><td style="color:var(--color-text-secondary)">4</td><td>Office Mart Bengaluru</td><td><span class="badge ws">Wholesale</span></td><td>Rs. 3,82,379</td></tr>
+          <tr><td style="color:var(--color-text-secondary)">5</td><td>Graphic Traders Chennai</td><td><span class="badge ws">Wholesale</span></td><td>Rs. 3,50,667</td></tr>
+          <tr><td style="color:var(--color-text-secondary)">6</td><td>Business Supplies Co Chandigarh</td><td><span class="badge ws">Wholesale</span></td><td>Rs. 3,22,372</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Customer Segmentation</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="segChart" role="img" aria-label="Bar chart comparing wholesale vs retail customers">Wholesale customers have much higher average spend.</canvas></div>
+      <div class="stat-row">
+        <div class="mini-stat"><div class="mini-stat-lbl">Wholesale customers</div><div class="mini-stat-val" style="color:#185fa5">45</div></div>
+        <div class="mini-stat"><div class="mini-stat-lbl">Retail customers</div><div class="mini-stat-val" style="color:#a32d2d">105</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">City-wise Revenue — Top 5</div>
+    <div class="bar-horiz" id="cityBars"></div>
+  </div>
+</div>
+
+<!-- PAGE: SALES TEAM -->
+<div class="page" id="page-team">
+  <div class="row-half">
+    <div class="card">
+      <div class="card-title">Revenue by Sales Rep</div>
+      <div class="chart-wrap" style="height:260px"><canvas id="empChart" role="img" aria-label="Horizontal bar chart of revenue by employee">Divya Nair leads with Rs.11.8L.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Team Performance</div>
+      <table class="cust-table">
+        <thead><tr><th>Employee</th><th>Region</th><th>Orders</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <tr><td>Divya Nair</td><td>East</td><td>309</td><td>Rs. 11,79,122</td></tr>
+          <tr><td>Sneha Kapoor</td><td>West</td><td>311</td><td>Rs. 10,96,608</td></tr>
+          <tr><td>Vikram Rao</td><td>Central</td><td>283</td><td>Rs. 10,92,645</td></tr>
+          <tr><td>Aman Verma</td><td>East</td><td>303</td><td>Rs. 10,59,047</td></tr>
+          <tr><td>Karan Malhotra</td><td>South</td><td>296</td><td>Rs. 10,58,800</td></tr>
+        </tbody>
+      </table>
+      <div class="stat-row">
+        <div class="mini-stat"><div class="mini-stat-lbl">Avg orders/rep</div><div class="mini-stat-val">299</div></div>
+        <div class="mini-stat"><div class="mini-stat-lbl">Avg revenue/rep</div><div class="mini-stat-val">Rs. 10.1L</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="row3">
+    <div class="card">
+      <div class="card-title">Revenue by Region</div>
+      <div class="chart-wrap" style="height:160px"><canvas id="regPieChart" role="img" aria-label="Donut chart of revenue by region">East leads, all regions relatively balanced.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Avg Processing Days</div>
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:48px;font-weight:500;color:#2e5984">3.0</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);margin-top:4px">days average</div>
+        <div style="margin-top:16px;padding:8px 12px;background:var(--color-background-success);color:var(--color-text-success);border-radius:var(--border-radius-md);font-size:12px">Within 3-day target</div>
+        <div class="stat-row" style="margin-top:10px">
+          <div class="mini-stat"><div class="mini-stat-lbl">Wholesale</div><div class="mini-stat-val">2.98d</div></div>
+          <div class="mini-stat"><div class="mini-stat-lbl">Retail</div><div class="mini-stat-val">3.01d</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Payment Methods</div>
+      <div class="meter-wrap" style="margin-top:8px">
+        <div class="meter-row"><div class="meter-top"><span class="meter-name">Bank Transfer</span><span class="meter-val">35%</span></div><div class="meter-track"><div class="meter-fill" style="width:35%;background:#2e5984"></div></div></div>
+        <div class="meter-row"><div class="meter-top"><span class="meter-name">UPI</span><span class="meter-val">25%</span></div><div class="meter-track"><div class="meter-fill" style="width:25%;background:#3E7CB1"></div></div></div>
+        <div class="meter-row"><div class="meter-top"><span class="meter-name">Credit Terms</span><span class="meter-val">20%</span></div><div class="meter-track"><div class="meter-fill" style="width:20%;background:#5b8c5a"></div></div></div>
+        <div class="meter-row"><div class="meter-top"><span class="meter-name">Cash</span><span class="meter-val">12%</span></div><div class="meter-track"><div class="meter-fill" style="width:12%;background:#e8964d"></div></div></div>
+        <div class="meter-row"><div class="meter-top"><span class="meter-name">Cheque</span><span class="meter-val">8%</span></div><div class="meter-track"><div class="meter-fill" style="width:8%;background:#ba7517"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const monthly = [{"month":"2024-01","revenue":392463.7,"profit":113823.85,"orders":113},{"month":"2024-02","revenue":236079.39,"profit":73576.52,"orders":100},{"month":"2024-03","revenue":273501.46,"profit":83718.0,"orders":99},{"month":"2024-04","revenue":535930.44,"profit":157264.37,"orders":154},{"month":"2024-05","revenue":476492.46,"profit":136888.31,"orders":139},{"month":"2024-06","revenue":458791.36,"profit":133850.2,"orders":144},{"month":"2024-07","revenue":316860.71,"profit":94746.75,"orders":103},{"month":"2024-08","revenue":384611.9,"profit":109677.51,"orders":94},{"month":"2024-09","revenue":413438.22,"profit":120190.54,"orders":122},{"month":"2024-10","revenue":626755.2,"profit":181029.17,"orders":158},{"month":"2024-11","revenue":447884.52,"profit":135089.07,"orders":143},{"month":"2024-12","revenue":298851.58,"profit":85386.65,"orders":100},{"month":"2025-01","revenue":333875.47,"profit":101332.79,"orders":109},{"month":"2025-02","revenue":309897.98,"profit":93821.41,"orders":108},{"month":"2025-03","revenue":469737.72,"profit":137052.55,"orders":122},{"month":"2025-04","revenue":601210.82,"profit":169759.8,"orders":149},{"month":"2025-05","revenue":444118.26,"profit":130769.34,"orders":132},{"month":"2025-06","revenue":411432.34,"profit":123811.6,"orders":151},{"month":"2025-07","revenue":404429.22,"profit":116925.9,"orders":124},{"month":"2025-08","revenue":306046.35,"profit":90512.24,"orders":104},{"month":"2025-09","revenue":501396.36,"profit":148877.7,"orders":160},{"month":"2025-10","revenue":483714.57,"profit":139111.58,"orders":132},{"month":"2025-11","revenue":602154.0,"profit":170347.75,"orders":126},{"month":"2025-12","revenue":392044.1,"profit":111620.01,"orders":101}];
+
+const allMonthly = monthly;
+let activeYear = 'all', activeType = 'all';
+
+function fmt(n){return 'Rs. '+(n>=10000000?(n/10000000).toFixed(2)+' Cr':n>=100000?(n/100000).toFixed(1)+' L':n>=1000?(n/1000).toFixed(0)+' K':n.toFixed(0));}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function applyFilters(){
+  activeYear = document.getElementById('yearFilter').value;
+  activeType = document.getElementById('typeFilter').value;
+  let filtered = allMonthly;
+  if(activeYear!=='all') filtered = filtered.filter(d=>d.month.startsWith(activeYear));
+  const typeRevShare = {all:1, Wholesale:0.866, Retail:0.134};
+  const tMult = typeRevShare[activeType]||1;
+  const rev = filtered.reduce((s,d)=>s+d.revenue,0)*tMult;
+  const prof = filtered.reduce((s,d)=>s+d.profit,0)*tMult;
+  const ord = filtered.reduce((s,d)=>s+d.orders,0);
+  document.getElementById('kpi-rev').textContent = fmt(rev);
+  document.getElementById('kpi-profit').textContent = fmt(prof);
+  document.getElementById('kpi-orders').textContent = ord.toLocaleString();
+  document.getElementById('kpi-margin').textContent = (prof/rev*100).toFixed(1)+'%';
+  document.getElementById('kpi-aov').textContent = fmt(rev/ord);
+  document.getElementById('filter-label').textContent = 'Showing: '+ord.toLocaleString()+' orders';
+  trendChart.data.labels = filtered.map(d=>d.month.slice(5)+(activeYear==='all'?' '+d.month.slice(2,4):''));
+  trendChart.data.datasets[0].data = filtered.map(d=>Math.round(d.revenue*tMult));
+  trendChart.data.datasets[1].data = filtered.map(d=>Math.round(d.profit*tMult));
+  trendChart.update();
+}
+
+const trendChart = new Chart(document.getElementById('trendChart'),{
+  type:'line',
+  data:{
+    labels: monthly.map(d=>d.month.slice(5)+' '+d.month.slice(2,4)),
+    datasets:[
+      {label:'Revenue',data:monthly.map(d=>Math.round(d.revenue)),borderColor:'#2e5984',backgroundColor:'rgba(46,89,132,0.08)',tension:.4,pointRadius:2,fill:true,borderWidth:2,pointStyle:'circle'},
+      {label:'Profit',data:monthly.map(d=>Math.round(d.profit)),borderColor:'#5b8c5a',backgroundColor:'rgba(91,140,90,0.06)',tension:.4,pointRadius:2,fill:true,borderWidth:2,borderDash:[4,3],pointStyle:'rect'}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+fmt(ctx.raw)}}},scales:{x:{ticks:{font:{size:10},maxRotation:45,autoSkip:true}},y:{ticks:{callback:v=>fmt(v),font:{size:10}},grid:{color:'rgba(128,128,128,0.1)'}}}}
+});
+
+new Chart(document.getElementById('donutChart'),{
+  type:'doughnut',
+  data:{labels:['Wholesale','Retail'],datasets:[{data:[8764807,1356911],backgroundColor:['#2e5984','#e8964d'],borderWidth:2,borderColor:'#fff',hoverOffset:4}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'70%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.label+': '+fmt(ctx.raw)}}}}
+});
+
+new Chart(document.getElementById('regionChart'),{
+  type:'bar',
+  data:{
+    labels:['East','West','Central','North','South'],
+    datasets:[{label:'Revenue',data:[2238169,2098373,2031889,1897696,1793402],backgroundColor:['#2e5984','#3E7CB1','#5B96C5','#7EAFD4','#A0C3DE'],borderRadius:3}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{callback:v=>fmt(v),font:{size:10}},grid:{color:'rgba(128,128,128,0.1)'}}}}
+});
+
+new Chart(document.getElementById('statusChart'),{
+  type:'doughnut',
+  data:{labels:['Delivered','Returned','Cancelled'],datasets:[{data:[2696,291,213],backgroundColor:['#3b6d11','#e8964d','#a32d2d'],borderWidth:2,borderColor:'#fff'}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false}}}
+});
+
+const products=[{product_name:"Cold Lamination Roll - 12in",revenue:1165043},{product_name:"Thermal Lamination Roll - 25in",revenue:989792},{product_name:"Cold Lamination Roll - 27in",revenue:868265},{product_name:"Thermal Lamination Roll - 36in",revenue:843019},{product_name:"Cold Lamination Roll - 25in",revenue:761115},{product_name:"Thermal Lamination Roll - 12in",revenue:672371},{product_name:"Thermal Lamination Roll - 27in",revenue:471386},{product_name:"Soft Touch Lamination Film - A3",revenue:378928}];
+const maxRev=products[0].revenue;
+const colors=['#1a2e4a','#2e5984','#3E7CB1','#5B96C5','#7EAFD4','#A0C3DE','#5b8c5a','#e8964d'];
+const pb=document.getElementById('prodBars');
+products.forEach((p,i)=>{
+  const pct=Math.round(p.revenue/maxRev*100);
+  pb.innerHTML+=`<div class="bar-row"><div class="bar-label" title="${p.product_name}">${p.product_name}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${colors[i]}">${fmt(p.revenue)}</div></div></div>`;
+});
+
+new Chart(document.getElementById('catChart'),{
+  type:'bar',
+  data:{labels:['Roll','Film','Pouch','Sheet'],datasets:[{label:'Revenue',data:[5770992,2083828,1604112,662786],backgroundColor:['#2e5984','#3E7CB1','#5b8c5a','#e8964d'],borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},scales:{x:{ticks:{font:{size:11}}},y:{ticks:{callback:v=>fmt(v),font:{size:10}},grid:{color:'rgba(128,128,128,0.1)'}}}}
+});
+
+const cities=[{city:'Chandigarh',revenue:1520389},{city:'Bengaluru',revenue:1215282},{city:'Ahmedabad',revenue:1002905},{city:'Chennai',revenue:828298},{city:'Nagpur',revenue:786900}];
+const maxCity=cities[0].revenue;
+const cb=document.getElementById('cityBars');
+cities.forEach((c,i)=>{
+  const pct=Math.round(c.revenue/maxCity*100);
+  cb.innerHTML+=`<div class="bar-row"><div class="bar-label" style="width:100px">${c.city}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${colors[i]}">${fmt(c.revenue)}</div></div></div>`;
+});
+
+new Chart(document.getElementById('segChart'),{
+  type:'bar',
+  data:{labels:['Wholesale','Retail'],datasets:[{label:'Avg Revenue/Customer',data:[Math.round(8764807/45),Math.round(1356911/105)],backgroundColor:['#2e5984','#e8964d'],borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'Avg: '+fmt(ctx.raw)}}},scales:{y:{ticks:{callback:v=>fmt(v),font:{size:10}},grid:{color:'rgba(128,128,128,0.1)'}}}}
+});
+
+new Chart(document.getElementById('empChart'),{
+  type:'bar',
+  data:{
+    labels:['Divya Nair','Sneha Kapoor','Vikram Rao','Aman Verma','Karan Malhotra','Rahul Sharma','Priya Mehta','Rohit Joshi','Neha Gupta','Anita Desai'],
+    datasets:[{label:'Revenue',data:[1179122,1096608,1092645,1059047,1058800,980000,960000,890000,870000,835000],backgroundColor:'#2e5984',borderRadius:3}]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},scales:{x:{ticks:{callback:v=>fmt(v),font:{size:10}},grid:{color:'rgba(128,128,128,0.1)'}},y:{ticks:{font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('regPieChart'),{
+  type:'doughnut',
+  data:{labels:['East','West','Central','North','South'],datasets:[{data:[2238169,2098373,2031889,1897696,1793402],backgroundColor:['#1a2e4a','#2e5984','#5b8c5a','#e8964d','#7EAFD4'],borderWidth:2,borderColor:'#fff'}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.label+': '+fmt(ctx.raw)}}}}
+});
+</script>

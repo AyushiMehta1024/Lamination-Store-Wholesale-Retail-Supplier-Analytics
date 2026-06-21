@@ -1,0 +1,33 @@
+product_id,product_name,category,size,thickness,unit_cost,retail_price,wholesale_price
+P1000,Glossy Lamination Pouch - A4,Pouch,A4,100 micron,5.55,10.41,7.4
+P1002,Glossy Lamination Pouch - A3,Pouch,A3,150 micron,2.54,4.14,3.79
+P1005,Glossy Lamination Pouch - ID Card,Pouch,ID Card,125 micron,5.53,8.96,8.17
+P1008,Glossy Lamination Pouch - A5,Pouch,A5,250 micron,8.52,18.57,11.94
+P1011,Glossy Lamination Pouch - Letter,Pouch,Letter,250 micron,7.11,12.76,10.18
+P1014,Matte Lamination Pouch - A4,Pouch,A4,100 micron,3.53,6.52,5.08
+P1016,Matte Lamination Pouch - A3,Pouch,A3,75 micron,4.16,6.93,5.44
+P1018,Matte Lamination Pouch - ID Card,Pouch,ID Card,250 micron,4.71,8.68,5.96
+P1020,Matte Lamination Pouch - A5,Pouch,A5,250 micron,3.49,5.89,4.79
+P1022,Matte Lamination Pouch - Letter,Pouch,Letter,75 micron,3.6,6.86,5.13
+P1025,Thermal Lamination Roll - 12in,Roll,12in,150 micron,28.42,54.94,39.29
+P1027,Thermal Lamination Roll - 25in,Roll,25in,75 micron,38.4,65.16,56.63
+P1029,Thermal Lamination Roll - 27in,Roll,27in,75 micron,20.28,34.62,27.21
+P1032,Thermal Lamination Roll - 36in,Roll,36in,250 micron,34.68,71.48,43.73
+P1034,Cold Lamination Roll - 12in,Roll,12in,150 micron,50.74,107.1,67.45
+P1036,Cold Lamination Roll - 25in,Roll,25in,75 micron,37.22,67.58,49.26
+P1039,Cold Lamination Roll - 27in,Roll,27in,150 micron,36.21,70.77,45.54
+P1042,Self-Adhesive Laminate Sheet - A4,Sheet,A4,125 micron,8.14,15.17,10.33
+P1044,Self-Adhesive Laminate Sheet - A3,Sheet,A3,75 micron,4.4,8.99,6.11
+P1046,Self-Adhesive Laminate Sheet - A2,Sheet,A2,100 micron,4.2,8.64,6.1
+P1049,Soft Touch Lamination Film - A4,Film,A4,150 micron,8.44,16.27,12.54
+P1052,Soft Touch Lamination Film - A3,Film,A3,250 micron,14.67,29.94,21.28
+P1055,Soft Touch Lamination Film - Roll-25in,Film,Roll-25in,150 micron,7.4,15.82,9.97
+P1057,Holographic Lamination Film - A4,Film,A4,250 micron,13.48,27.97,19.51
+P1059,Holographic Lamination Film - Roll-25in,Film,Roll-25in,75 micron,9.03,16.76,11.79
+P1061,PVC ID Card Laminate - ID Card,Pouch,ID Card,150 micron,7.04,13.3,9.47
+P1063,PVC ID Card Laminate - Business Card,Pouch,Business Card,250 micron,7.28,13.29,9.62
+P1066,Anti-Scratch Lamination Sheet - A4,Sheet,A4,125 micron,6.91,11.24,9.12
+P1069,Anti-Scratch Lamination Sheet - A3,Sheet,A3,100 micron,4.13,8.65,6.14
+P1072,UV Protective Lamination Film - A4,Film,A4,150 micron,6.0,9.65,7.61
+P1074,UV Protective Lamination Film - A3,Film,A3,250 micron,12.09,21.0,17.14
+P1077,UV Protective Lamination Film - Roll-25in,Film,Roll-25in,150 micron,12.35,24.27,17.4
